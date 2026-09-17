@@ -13,14 +13,16 @@ type Plan = {
   features: string[];
   popular?: boolean;
   action?: string;
+  admin?: boolean;
 };
 
 const plans: Plan[] = [
+  { name: "Starter", subtitle: "For personal projects and lightweight apps", price: 50, priceDisplay: "KES 50.00", features: ["1024 MB Memory", "5120 MB Disk", "100% CPU", "1 Database", "1 Backup"] },
+  { name: "Basic", subtitle: "For growing sites and small teams", price: 80, priceDisplay: "KES 80.00", features: ["1536 MB Memory", "7680 MB Disk", "150% CPU", "2 Databases", "2 Backups"] },
   { name: "Standard", subtitle: "Our most popular plan", price: 100, priceDisplay: "KES 100.00", popular: true, features: ["2048 MB Memory", "10240 MB Disk", "200% CPU", "3 Databases", "3 Backups"] },
   { name: "Pro", subtitle: "For larger high-traffic workloads", price: 150, priceDisplay: "KES 150.00", features: ["4096 MB Memory", "20480 MB Disk", "300% CPU", "5 Databases", "5 Backups"] },
   { name: "Unlimited", subtitle: "No caps on RAM, disk or CPU", price: 250, priceDisplay: "KES 250.00", features: ["0 MB Memory (Unlimited)", "0 MB Disk (Unlimited)", "0% CPU (Unlimited)", "10 Databases", "10 Backups"] },
-  { name: "Premium", subtitle: "For multi-service production stacks", price: 500, priceDisplay: "KES 500.00", features: ["8192 MB Memory", "51200 MB Disk", "500% CPU", "15 Databases", "15 Backups"] },
-  { name: "Enterprise", subtitle: "Tailored capacity and a dedicated team", price: null, priceDisplay: "Custom", action: "Talk to sales", features: ["Custom resources", "Priority provisioning", "Dedicated support", "Unlimited collaboration", "Custom backups"] },
+  { name: "Admin Panel 🎯", subtitle: "For hosting providers & Pterodactyl admins", price: 450, priceDisplay: "KES 450.00", admin: true, features: ["Unlimited Memory/Disk/CPU", "Unlimited Databases/Backups/Servers", "Full Pterodactyl Admin Access", "Manage Users, Servers, Nodes, Allocations", "Nest & Egg Management", "Database & Location Management", "Server Import/Suspend/Delete", "User Impersonation & Logs", "24/7 Priority + Root Access"] },
 ];
 
 const stats = [
@@ -38,7 +40,7 @@ export default function Dashboard() {
 
   const handlePlan = (plan: Plan) => {
     if (plan.price === null) {
-      toast("Sales concierge", { description: "Enterprise plan requests are ready for your account manager." });
+      toast("Sales concierge", { description: "Custom plan requests are ready for your account manager." });
       return;
     }
     setSelectedPlan(plan);
@@ -71,15 +73,16 @@ export default function Dashboard() {
           <div className="mb-5 flex items-end justify-between"><div><p className="text-sm font-extrabold text-white">Launch-ready capacity</p><p className="mt-1 text-xs text-[#8f80a7]">All plans include DDoS protection and instant deployment.</p></div><div className="hidden items-center gap-1.5 text-xs text-[#a094b8] sm:flex"><Database size={14} className="text-[#a86dff]" /> Kenya region</div></div>
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
             {plans.map((plan) => (
-              <article key={plan.name} className={`fluxy-card fluxy-card-hover relative flex min-h-[410px] flex-col rounded-2xl p-6 ${plan.popular ? "border-[#7c3aed] shadow-[0_18px_45px_rgba(124,58,237,0.25)]" : ""}`}>
+              <article key={plan.name} className={`fluxy-card fluxy-card-hover relative flex min-h-[410px] flex-col rounded-2xl p-6 ${plan.popular ? "border-[#7c3aed] shadow-[0_18px_45px_rgba(124,58,237,0.25)]" : ""} ${plan.admin ? "border-[#f59e0b]/80 shadow-[0_0_32px_rgba(245,158,11,0.22),0_18px_45px_rgba(124,58,237,0.18)]" : ""}`}>
                 {plan.popular && <span className="absolute right-5 top-5 rounded-full bg-[#7c3aed] px-2.5 py-1 text-[9px] font-extrabold tracking-[0.11em] text-white shadow-[0_0_18px_rgba(124,58,237,0.75)]">POPULAR</span>}
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-500/15 text-[#b481ff]"><HardDrive size={19} /></div>
+                {plan.admin && <span className="absolute right-5 top-5 rounded-full border border-[#f59e0b]/60 bg-gradient-to-r from-[#f59e0b]/25 to-[#7c3aed]/35 px-2.5 py-1 text-[9px] font-extrabold tracking-[0.1em] text-[#fbbf24] shadow-[0_0_18px_rgba(245,158,11,0.25)]">ADMIN POWER</span>}
+                <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${plan.admin ? "bg-[#f59e0b]/15 text-[#fbbf24]" : "bg-violet-500/15 text-[#b481ff]"}`}><HardDrive size={19} /></div>
                 <h2 className="mt-5 text-[26px] font-extrabold tracking-[-0.045em] text-white">{plan.name}</h2>
                 <p className="mt-1 h-10 max-w-[225px] text-[13px] leading-5 text-[#a094b8]">{plan.subtitle}</p>
                 <div className="mt-5 flex items-end gap-2"><p className="text-[34px] font-extrabold leading-none tracking-[-0.06em] text-white">{plan.priceDisplay}</p>{plan.price !== null && <span className="mb-0.5 text-sm text-[#8f80a7]">/ month</span>}</div>
                 <div className="my-5 h-px bg-[#2d1f4e]" />
                 <ul className="space-y-3">{plan.features.map((feature) => <li key={feature} className="flex items-center gap-2.5 text-[13px] text-[#f2edfa]"><span className="flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full bg-[#7c3aed] text-white"><Check size={12} strokeWidth={3} /></span>{feature}</li>)}</ul>
-                <button type="button" onClick={() => handlePlan(plan)} className="gradient-button mt-auto w-full rounded-xl px-4 py-3 text-sm font-extrabold text-white">{plan.action ?? "Buy now"}</button>
+                <button type="button" onClick={() => handlePlan(plan)} className={`mt-auto w-full rounded-xl px-4 py-3 text-sm font-extrabold text-white transition hover:brightness-110 ${plan.admin ? "bg-gradient-to-r from-[#f59e0b] to-[#7c3aed] shadow-[0_10px_24px_rgba(245,158,11,0.2)]" : "gradient-button"}`}>{plan.action ?? "BUY NOW"}</button>
               </article>
             ))}
           </div>
