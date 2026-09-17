@@ -6,6 +6,7 @@ import {
   LayoutDashboard,
   LogOut,
   Menu,
+  Megaphone,
   Rocket,
   Server,
   Settings,
@@ -22,12 +23,14 @@ type MenuItem = {
   label: string;
   path?: string;
   icon: LucideIcon;
+  color?: string;
 };
 
 const primaryNavigation: MenuItem[] = [
   { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
   { label: "My Servers", path: "/servers", icon: Server },
   { label: "Wallet", path: "/wallet", icon: Wallet },
+  { label: "WhatsApp Channels 📢", path: "/whatsapp-channels", icon: Megaphone, color: "#25D366" },
 ];
 
 const secondaryNavigation: MenuItem[] = [
@@ -65,6 +68,7 @@ function Navigation({ onNavigate }: { onNavigate?: () => void }) {
         {primaryNavigation.map((item) => {
           const Icon = item.icon;
           const active = location === item.path;
+          const iconClass = item.color ? "group-hover:brightness-110" : active ? "text-[#b481ff]" : "text-[#87769f] group-hover:text-[#c6a4ff]";
           return (
             <Link
               key={item.label}
@@ -73,7 +77,7 @@ function Navigation({ onNavigate }: { onNavigate?: () => void }) {
               className={`group relative flex items-center gap-3 rounded-xl px-3 py-3 text-[13px] font-semibold transition ${active ? "bg-[#1a102e] text-white" : "text-[#a094b8] hover:bg-[#1a102e]/60 hover:text-white"}`}
             >
               {active && <span className="absolute -left-3 h-7 w-1 rounded-r-full bg-[#7c3aed] shadow-[0_0_12px_rgba(124,58,237,0.9)]" />}
-              <Icon size={18} className={active ? "text-[#b481ff]" : "text-[#87769f] group-hover:text-[#c6a4ff]"} />
+              <Icon size={18} className={iconClass} color={item.color} />
               {item.label}
             </Link>
           );

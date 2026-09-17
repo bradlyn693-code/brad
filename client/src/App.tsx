@@ -10,6 +10,7 @@ import Servers from "./pages/Servers";
 import Settings from "./pages/Settings";
 import Signup from "./pages/Signup";
 import Wallet from "./pages/Wallet";
+import WhatsAppChannels from "./pages/WhatsAppChannels";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const isAuthenticated = localStorage.getItem("fluxy_logged") === "true";
@@ -33,6 +34,9 @@ function Router() {
       </Route>
       <Route path="/wallet">
         <ProtectedRoute><Wallet /></ProtectedRoute>
+      </Route>
+      <Route path="/whatsapp-channels">
+        <ProtectedRoute><WhatsAppChannels /></ProtectedRoute>
       </Route>
       <Route path="/settings">
         <ProtectedRoute><Settings /></ProtectedRoute>
