@@ -1,6 +1,6 @@
 import Layout from "@/components/Layout";
 import PaystackCheckout from "@/components/PaystackCheckout";
-import { Activity, Bell, Check, CircleHelp, CreditCard, Database, HardDrive, Search, Server, Zap } from "lucide-react";
+import { Bell, Check, CircleHelp, Database, HardDrive, Search, Zap } from "lucide-react";
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { toast } from "sonner";
@@ -21,12 +21,6 @@ const plans: Plan[] = [
   { name: "Pro", subtitle: "For larger high-traffic workloads", price: 150, priceDisplay: "KES 150.00", features: ["4096 MB Memory", "20480 MB Disk", "300% CPU", "5 Databases", "5 Backups"] },
   { name: "Unlimited", subtitle: "No caps on RAM, disk or CPU", price: 250, priceDisplay: "KES 250.00", features: ["0 MB Memory (Unlimited)", "0 MB Disk (Unlimited)", "0% CPU (Unlimited)", "10 Databases", "10 Backups"] },
   { name: "Admin Panel 🎯", subtitle: "For hosting providers & Pterodactyl admins", price: 450, priceDisplay: "KES 450.00", admin: true, features: ["Unlimited Memory/Disk/CPU", "Unlimited Databases/Backups/Servers", "Full Pterodactyl Admin Access", "Manage Users, Servers, Nodes, Allocations", "Nest & Egg Management", "Database & Location Management", "Server Import/Suspend/Delete", "User Impersonation & Logs", "24/7 Priority + Root Access"] },
-];
-
-const stats = [
-  { label: "Active Servers", value: "12/20", note: "+2 added this month", icon: Server, color: "bg-violet-500/15 text-violet-300" },
-  { label: "Wallet Balance", value: "$1,240.50", note: "Available for renewals", icon: CreditCard, color: "bg-fuchsia-500/15 text-fuchsia-300" },
-  { label: "Monthly Usage", value: "78%", note: "of Pro plan limit", icon: Activity, color: "bg-indigo-500/15 text-indigo-300" },
 ];
 
 export default function Dashboard() {
@@ -60,14 +54,7 @@ export default function Dashboard() {
           </div>
         </header>
 
-        <section className="reveal-up-delay mt-7 grid grid-cols-1 gap-4 md:grid-cols-3">
-          {stats.map((stat) => {
-            const Icon = stat.icon;
-            return <article key={stat.label} className="fluxy-card fluxy-card-hover rounded-2xl p-4"><div className="flex items-start justify-between"><div className={`flex h-10 w-10 items-center justify-center rounded-xl ${stat.color}`}><Icon size={19} /></div><span className="rounded-full bg-violet-500/10 px-2 py-1 text-[10px] font-bold text-[#af85e8]">Live</span></div><p className="mt-4 text-[13px] font-medium text-[#a094b8]">{stat.label}</p><p className="mt-1 text-[30px] font-extrabold tracking-[-0.05em] text-white">{stat.value}</p><p className="mt-1 text-[11px] text-[#827195]">{stat.note}</p></article>;
-          })}
-        </section>
-
-        <section className="mt-10">
+        <section className="mt-8">
           <div className="mb-5 flex items-end justify-between"><div><p className="text-sm font-extrabold text-white">Launch-ready capacity</p><p className="mt-1 text-xs text-[#8f80a7]">All plans include DDoS protection and instant deployment.</p></div><div className="hidden items-center gap-1.5 text-xs text-[#a094b8] sm:flex"><Database size={14} className="text-[#a86dff]" /> Kenya region</div></div>
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
             {plans.map((plan) => (
