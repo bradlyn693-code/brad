@@ -34,7 +34,7 @@ const secondaryNavigation: MenuItem[] = [
   { label: "Deployments", icon: Rocket },
   { label: "Analytics", icon: BarChart3 },
   { label: "Team", icon: Users },
-  { label: "Settings", icon: Settings },
+  { label: "Settings", path: "/settings", icon: Settings },
 ];
 
 function Brand() {
@@ -83,6 +83,21 @@ function Navigation({ onNavigate }: { onNavigate?: () => void }) {
       <div className="space-y-1">
         {secondaryNavigation.map((item) => {
           const Icon = item.icon;
+          const active = location === item.path;
+          if (item.path) {
+            return (
+              <Link
+                key={item.label}
+                href={item.path}
+                onClick={onNavigate}
+                className={`group relative flex items-center gap-3 rounded-xl px-3 py-3 text-[13px] font-semibold transition ${active ? "bg-[#1a102e] text-white" : "text-[#a094b8] hover:bg-[#1a102e]/60 hover:text-white"}`}
+              >
+                {active && <span className="absolute -left-3 h-7 w-1 rounded-r-full bg-[#7c3aed] shadow-[0_0_12px_rgba(124,58,237,0.9)]" />}
+                <Icon size={18} className={active ? "text-[#b481ff]" : "text-[#87769f] group-hover:text-[#c6a4ff]"} />
+                {item.label}
+              </Link>
+            );
+          }
           return (
             <button
               type="button"

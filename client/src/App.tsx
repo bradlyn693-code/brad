@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import Servers from "./pages/Servers";
+import Settings from "./pages/Settings";
 import Signup from "./pages/Signup";
 import Wallet from "./pages/Wallet";
 
@@ -32,6 +33,9 @@ function Router() {
       </Route>
       <Route path="/wallet">
         <ProtectedRoute><Wallet /></ProtectedRoute>
+      </Route>
+      <Route path="/settings">
+        <ProtectedRoute><Settings /></ProtectedRoute>
       </Route>
       <Route component={NotFound} />
     </Switch>
