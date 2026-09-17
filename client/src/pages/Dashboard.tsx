@@ -17,8 +17,6 @@ type Plan = {
 };
 
 const plans: Plan[] = [
-  { name: "Starter", subtitle: "For personal projects and lightweight apps", price: 50, priceDisplay: "KES 50.00", features: ["1024 MB Memory", "5120 MB Disk", "100% CPU", "1 Database", "1 Backup"] },
-  { name: "Basic", subtitle: "For growing sites and small teams", price: 80, priceDisplay: "KES 80.00", features: ["1536 MB Memory", "7680 MB Disk", "150% CPU", "2 Databases", "2 Backups"] },
   { name: "Standard", subtitle: "Our most popular plan", price: 100, priceDisplay: "KES 100.00", popular: true, features: ["2048 MB Memory", "10240 MB Disk", "200% CPU", "3 Databases", "3 Backups"] },
   { name: "Pro", subtitle: "For larger high-traffic workloads", price: 150, priceDisplay: "KES 150.00", features: ["4096 MB Memory", "20480 MB Disk", "300% CPU", "5 Databases", "5 Backups"] },
   { name: "Unlimited", subtitle: "No caps on RAM, disk or CPU", price: 250, priceDisplay: "KES 250.00", features: ["0 MB Memory (Unlimited)", "0 MB Disk (Unlimited)", "0% CPU (Unlimited)", "10 Databases", "10 Backups"] },
