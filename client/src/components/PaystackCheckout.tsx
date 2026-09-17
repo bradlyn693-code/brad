@@ -40,6 +40,7 @@ export default function PaystackCheckout({ plan, onClose, onSuccess }: PaystackC
   const [email, setEmail] = useState("");
   const [customAmount, setCustomAmount] = useState("");
   const [error, setError] = useState("");
+  const [paystackOpen, setPaystackOpen] = useState(false);
   const hasCustomAmount = plan.allowCustomAmount === true;
   const actualAmount = useMemo(() => hasCustomAmount ? Number(customAmount) : plan.price, [customAmount, hasCustomAmount, plan.price]);
   const priceDisplay = hasCustomAmount && actualAmount > 0
@@ -73,13 +74,20 @@ export default function PaystackCheckout({ plan, onClose, onSuccess }: PaystackC
       ref: `FLUXY_${Date.now()}`,
       metadata: { plan_name: plan.name },
       callback: (response) => onSuccess(response, actualAmount),
-      onClose: () => toast("Payment window closed", { description: "No payment was completed." }),
+      onClose: () => {
+        setPaystackOpen(false);
+        toast("Payment window closed", { description: "No payment was completed." });
+      },
     });
-    handler.openIframe();
+    // Paystack appends its Inline iframe to the document body. Hide the
+    // Fluxy checkout layer first so the Paystack payment page is the visible
+    // top-level overlay instead of sitting behind our modal backdrop.
+    setPaystackOpen(true);
+    window.setTimeout(() => handler.openIframe(), 0);
   };
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center overflow-y-auto bg-black/80 px-4 py-6 backdrop-blur-md" role="dialog" aria-modal="true" aria-label={`Checkout for ${plan.name}`}>
+    <div className={`fixed inset-0 z-[9999] ${paystackOpen ? "pointer-events-none invisible" : "flex"} items-center justify-center overflow-y-auto bg-black/80 px-4 py-6 backdrop-blur-md`} role="dialog" aria-modal="true" aria-label={`Checkout for ${plan.name}`}>
       <div className="reveal-up relative w-full max-w-[420px] rounded-[24px] border border-[#3e286a] bg-[#1a102e] p-6 shadow-[0_28px_80px_rgba(0,0,0,0.56),0_0_50px_rgba(124,58,237,0.18)] sm:p-8">
         <button type="button" onClick={onClose} aria-label="Close checkout" className="absolute right-5 top-5 rounded-xl border border-[#2d1f4e] bg-[#0f0a1a] p-2 text-[#a094b8] transition hover:border-[#7c3aed] hover:text-white"><X size={17} /></button>
         <div className="flex items-start gap-3 pr-10">
