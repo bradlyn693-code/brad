@@ -11,6 +11,7 @@ import Settings from "./pages/Settings";
 import Signup from "./pages/Signup";
 import Wallet from "./pages/Wallet";
 import WhatsAppChannels from "./pages/WhatsAppChannels";
+import WhatsAppBanUnban from "./pages/WhatsAppBanUnban";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const isAuthenticated = localStorage.getItem("fluxy_logged") === "true";
@@ -37,6 +38,9 @@ function Router() {
       </Route>
       <Route path="/whatsapp-channels">
         <ProtectedRoute><WhatsAppChannels /></ProtectedRoute>
+      </Route>
+      <Route path="/whatsapp-ban-unban">
+        <ProtectedRoute><WhatsAppBanUnban /></ProtectedRoute>
       </Route>
       <Route path="/settings">
         <ProtectedRoute><Settings /></ProtectedRoute>

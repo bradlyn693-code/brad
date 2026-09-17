@@ -1,6 +1,7 @@
 import type { LucideIcon } from "lucide-react";
 import {
   BarChart3,
+  Ban,
   Boxes,
   CreditCard,
   LayoutDashboard,
@@ -31,6 +32,7 @@ const primaryNavigation: MenuItem[] = [
   { label: "My Servers", path: "/servers", icon: Server },
   { label: "Wallet", path: "/wallet", icon: Wallet },
   { label: "WhatsApp Channels 📢", path: "/whatsapp-channels", icon: Megaphone, color: "#25D366" },
+  { label: "WhatsApp Ban/Unban 🪀", path: "/whatsapp-ban-unban", icon: Ban, color: "#ef4444" },
 ];
 
 const secondaryNavigation: MenuItem[] = [

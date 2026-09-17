@@ -8,6 +8,7 @@ type CheckoutPlan = {
   name: string;
   price: number;
   priceDisplay: string;
+  currency?: string;
   allowCustomAmount?: boolean;
 };
 
@@ -70,7 +71,7 @@ export default function PaystackCheckout({ plan, onClose, onSuccess }: PaystackC
       key: publicKey,
       email: email.trim(),
       amount: Math.round(actualAmount * 100),
-      currency: "KES",
+      currency: plan.currency ?? "KES",
       ref: `FLUXY_${Date.now()}`,
       metadata: { plan_name: plan.name },
       callback: (response) => onSuccess(response, actualAmount),
