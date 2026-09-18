@@ -1,6 +1,7 @@
 import { CreditCard, LockKeyhole, Loader2, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
+import { formatKesPrice, USD_TO_KES } from "@/lib/currency";
 
 type PaystackResponse = { reference: string; [key: string]: unknown };
 
@@ -48,7 +49,7 @@ export default function PaystackCheckout({ plan, onClose, onSuccess, autoOpen = 
   const hasCustomAmount = plan.allowCustomAmount === true;
   const actualAmount = useMemo(() => hasCustomAmount ? Number(customAmount) : plan.price, [customAmount, hasCustomAmount, plan.price]);
   const priceDisplay = hasCustomAmount && actualAmount > 0
-    ? `KES ${actualAmount.toLocaleString("en-KE", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+    ? formatKesPrice(actualAmount)
     : plan.priceDisplay;
 
   useEffect(() => {
@@ -118,6 +119,7 @@ export default function PaystackCheckout({ plan, onClose, onSuccess, autoOpen = 
             <div><p className="text-sm font-bold text-white">{plan.name}</p><p className="mt-1 text-xs text-[#a094b8]">Billed securely through Paystack</p></div>
             <p className="shrink-0 text-lg font-extrabold text-white">{priceDisplay}</p>
           </div>
+          <p className="mt-3 text-[10px] text-[#75658e]">USD equivalents are approximate · 1 USD ≈ KES {USD_TO_KES.toFixed(2)}</p>
           {hasCustomAmount && (
             <div className="mt-4">
               <label htmlFor="custom-amount" className="mb-2 block text-xs font-medium text-[#a094b8]">Amount (KES)</label>

@@ -2,6 +2,7 @@ import Layout from "@/components/Layout";
 import PaystackCheckout from "@/components/PaystackCheckout";
 import { Check, Megaphone, Sparkles, Target } from "lucide-react";
 import { useState } from "react";
+import { formatKesPrice } from "@/lib/currency";
 
 type ChannelPlan = {
   name: string;
@@ -21,7 +22,7 @@ const channelPlans: ChannelPlan[] = [
     name: "1K Followers ❤️",
     subtitle: "For new channels",
     price: 670,
-    priceDisplay: "KES 670.00",
+    priceDisplay: formatKesPrice(670),
     features: ["1000 Real Followers", "Fast Delivery 24-48h", "No Drop Guarantee", "Safe & Organic", "1K Post Views Bonus"],
     buttonClass: "bg-gradient-to-r from-[#25D366] to-[#18a94e] shadow-[0_10px_24px_rgba(37,211,102,0.22)]",
     icon: Megaphone,
@@ -30,7 +31,7 @@ const channelPlans: ChannelPlan[] = [
     name: "2K Followers 😃",
     subtitle: "Most popular for growth",
     price: 1390,
-    priceDisplay: "KES 1,390.00",
+    priceDisplay: formatKesPrice(1390),
     features: ["2000 Real Followers", "Fast Delivery 24-72h", "No Drop Guarantee", "Monetization Ready", "2K Post Views + 100 Reactions Bonus"],
     badge: "POPULAR",
     badgeClass: "bg-[#7c3aed] text-white shadow-[0_0_18px_rgba(124,58,237,0.7)]",
@@ -42,7 +43,7 @@ const channelPlans: ChannelPlan[] = [
     name: "5K Followers 🎯",
     subtitle: "For viral channels",
     price: 2250,
-    priceDisplay: "KES 2,250.00",
+    priceDisplay: formatKesPrice(2250),
     features: ["5000 Real Followers", "Fast Delivery 3-5 Days", "No Drop Lifetime", "Monetization Ready", "5K Views + 300 Reactions + Comments"],
     badge: "BEST VALUE",
     badgeClass: "border border-[#f59e0b]/60 bg-[#f59e0b]/15 text-[#fbbf24] shadow-[0_0_18px_rgba(245,158,11,0.3)]",

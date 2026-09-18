@@ -2,6 +2,7 @@ import Layout from "@/components/Layout";
 import PaystackCheckout from "@/components/PaystackCheckout";
 import { Check, Cpu, Gauge, HardDrive, MemoryStick, Network, ShieldCheck, ServerCog } from "lucide-react";
 import { useState } from "react";
+import { formatKesPrice } from "@/lib/currency";
 
 type VPSPlan = {
   name: string;
@@ -20,7 +21,7 @@ const vpsPlans: VPSPlan[] = [
   {
     name: "8GB RAM VPS 🖥️",
     price: 980,
-    priceDisplay: "KSH 980.00",
+    priceDisplay: formatKesPrice(980),
     subtitle: "Reliable starter compute",
     description: "A balanced virtual server for personal projects, development environments, lightweight websites, and small business tools.",
     features: ["8GB dedicated RAM", "4 vCPU cores", "100GB NVMe SSD", "1TB monthly bandwidth", "DDoS protection"],
@@ -30,7 +31,7 @@ const vpsPlans: VPSPlan[] = [
   {
     name: "12GB RAM VPS 🏈",
     price: 1600,
-    priceDisplay: "KSH 1,600.00",
+    priceDisplay: formatKesPrice(1600),
     subtitle: "Built for growing workloads",
     description: "Extra memory and processing headroom for busy websites, APIs, automation, and multi-service deployments.",
     features: ["12GB dedicated RAM", "6 vCPU cores", "160GB NVMe SSD", "2TB monthly bandwidth", "Priority network routing"],
@@ -42,7 +43,7 @@ const vpsPlans: VPSPlan[] = [
   {
     name: "24GB RAM VPS ⚾",
     price: 3500,
-    priceDisplay: "KSH 3,500.00",
+    priceDisplay: formatKesPrice(3500),
     subtitle: "Performance for production",
     description: "A production-ready tier for resource-intensive applications, databases, e-commerce, and high-traffic services.",
     features: ["24GB dedicated RAM", "8 vCPU cores", "240GB NVMe SSD", "4TB monthly bandwidth", "Advanced monitoring"],
@@ -52,7 +53,7 @@ const vpsPlans: VPSPlan[] = [
   {
     name: "48GB RAM VPS 🏓",
     price: 4900,
-    priceDisplay: "KSH 4,900.00",
+    priceDisplay: formatKesPrice(4900),
     subtitle: "Power for ambitious teams",
     description: "High-capacity infrastructure for large databases, container stacks, game services, and demanding business workloads.",
     features: ["48GB dedicated RAM", "12 vCPU cores", "400GB NVMe SSD", "6TB monthly bandwidth", "Dedicated support"],
@@ -63,7 +64,7 @@ const vpsPlans: VPSPlan[] = [
   {
     name: "64GB RAM VPS ⛳",
     price: 6000,
-    priceDisplay: "KSH 6,000.00",
+    priceDisplay: formatKesPrice(6000),
     subtitle: "Maximum virtual capacity",
     description: "Our flagship VPS for demanding production systems, large-scale platforms, analytics workloads, and power users.",
     features: ["64GB dedicated RAM", "16 vCPU cores", "600GB NVMe SSD", "10TB monthly bandwidth", "Priority 24/7 support"],

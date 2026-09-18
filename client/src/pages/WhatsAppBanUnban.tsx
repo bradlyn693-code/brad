@@ -2,6 +2,7 @@ import Layout from "@/components/Layout";
 import PaystackCheckout from "@/components/PaystackCheckout";
 import { Ban, Check, CircleCheck, Clock3, FileSearch, ShieldCheck, Smartphone, Sparkles } from "lucide-react";
 import { useState } from "react";
+import { formatUsdWithKes } from "@/lib/currency";
 
 type ServicePlan = {
   name: string;
@@ -21,7 +22,7 @@ const services: ServicePlan[] = [
   {
     name: "WhatsApp Ban 🪀",
     price: 780,
-    priceDisplay: "$6.00",
+    priceDisplay: formatUsdWithKes(6, 780),
     subtitle: "Professional WhatsApp number banning service",
     description: "For your own testing, spammer removal, or security research. Receive educational reports on how bans happen and how to protect your number. Fast delivery 1-24h.",
     features: ["100% Success Report", "Fast 1-24h", "For Security Testing Only", "Full Reason Report", "Protection Guide Included"],
@@ -32,7 +33,7 @@ const services: ServicePlan[] = [
   {
     name: "WhatsApp Unban 🥏",
     price: 715,
-    priceDisplay: "$5.50",
+    priceDisplay: formatUsdWithKes(5.5, 715),
     subtitle: "Professional recovery and appeal service",
     description: "For wrongly banned WhatsApp numbers. We help appeal and recover personal, business, or channel numbers with a high success rate. All ban types covered.",
     features: ["All Ban Types (Temp/Permanent)", "High Success 95%", "Fast Appeal 24-72h", "Works for Business & Personal", "Includes Anti-Ban Guide After Unban", "1 Week Support"],

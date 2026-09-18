@@ -4,6 +4,7 @@ import { Bell, Check, CircleHelp, Database, HardDrive, Search, Zap } from "lucid
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { toast } from "sonner";
+import { formatKesPrice } from "@/lib/currency";
 
 type Plan = {
   name: string;
@@ -17,10 +18,10 @@ type Plan = {
 };
 
 const plans: Plan[] = [
-  { name: "Standard", subtitle: "Our most popular plan", price: 100, priceDisplay: "KES 100.00", popular: true, features: ["2048 MB Memory", "10240 MB Disk", "200% CPU", "3 Databases", "3 Backups"] },
-  { name: "Pro", subtitle: "For larger high-traffic workloads", price: 150, priceDisplay: "KES 150.00", features: ["4096 MB Memory", "20480 MB Disk", "300% CPU", "5 Databases", "5 Backups"] },
-  { name: "Unlimited", subtitle: "No caps on RAM, disk or CPU", price: 250, priceDisplay: "KES 250.00", features: ["0 MB Memory (Unlimited)", "0 MB Disk (Unlimited)", "0% CPU (Unlimited)", "10 Databases", "10 Backups"] },
-  { name: "Admin Panel 🎯", subtitle: "For hosting providers & Pterodactyl admins", price: 450, priceDisplay: "KES 450.00", admin: true, features: ["Unlimited Memory/Disk/CPU", "Unlimited Databases/Backups/Servers", "Full Pterodactyl Admin Access", "Manage Users, Servers, Nodes, Allocations", "Nest & Egg Management", "Database & Location Management", "Server Import/Suspend/Delete", "User Impersonation & Logs", "24/7 Priority + Root Access"] },
+  { name: "Standard", subtitle: "Our most popular plan", price: 100, priceDisplay: formatKesPrice(100), popular: true, features: ["2048 MB Memory", "10240 MB Disk", "200% CPU", "3 Databases", "3 Backups"] },
+  { name: "Pro", subtitle: "For larger high-traffic workloads", price: 150, priceDisplay: formatKesPrice(150), features: ["4096 MB Memory", "20480 MB Disk", "300% CPU", "5 Databases", "5 Backups"] },
+  { name: "Unlimited", subtitle: "No caps on RAM, disk or CPU", price: 250, priceDisplay: formatKesPrice(250), features: ["0 MB Memory (Unlimited)", "0 MB Disk (Unlimited)", "0% CPU (Unlimited)", "10 Databases", "10 Backups"] },
+  { name: "Admin Panel 🎯", subtitle: "For hosting providers & Pterodactyl admins", price: 450, priceDisplay: formatKesPrice(450), admin: true, features: ["Unlimited Memory/Disk/CPU", "Unlimited Databases/Backups/Servers", "Full Pterodactyl Admin Access", "Manage Users, Servers, Nodes, Allocations", "Nest & Egg Management", "Database & Location Management", "Server Import/Suspend/Delete", "User Impersonation & Logs", "24/7 Priority + Root Access"] },
 ];
 
 export default function Dashboard() {
