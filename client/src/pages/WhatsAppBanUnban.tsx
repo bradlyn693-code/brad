@@ -89,7 +89,7 @@ export default function WhatsAppBanUnban() {
           </div>
         </section>
       </div>
-      {checkoutPlan && <PaystackCheckout plan={checkoutPlan} onClose={() => setSelectedService(null)} onSuccess={(response) => { localStorage.setItem("fluxy_last_whatsapp_service", checkoutPlan.name); localStorage.setItem("fluxy_last_whatsapp_payment", response.reference); window.alert(`Payment success ${response.reference}`); setSelectedService(null); }} />}
+      {checkoutPlan && <PaystackCheckout plan={checkoutPlan} autoOpen onClose={() => setSelectedService(null)} onSuccess={(response) => { localStorage.setItem("fluxy_last_whatsapp_service", checkoutPlan.name); localStorage.setItem("fluxy_last_whatsapp_payment", response.reference); window.alert(`Payment success ${response.reference}`); setSelectedService(null); }} />}
     </Layout>
   );
 }

@@ -1,5 +1,5 @@
-import { CreditCard, LockKeyhole, X } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { CreditCard, LockKeyhole, Loader2, X } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
 type PaystackResponse = { reference: string; [key: string]: unknown };
@@ -16,6 +16,7 @@ type PaystackCheckoutProps = {
   plan: CheckoutPlan;
   onClose: () => void;
   onSuccess: (response: PaystackResponse, actualAmount: number) => void;
+  autoOpen?: boolean;
 };
 
 declare global {
@@ -37,11 +38,13 @@ declare global {
 
 const publicKey = "pk_live_746fa4cd031258a58692b35c6f73e79ca330c873";
 
-export default function PaystackCheckout({ plan, onClose, onSuccess }: PaystackCheckoutProps) {
+export default function PaystackCheckout({ plan, onClose, onSuccess, autoOpen = false }: PaystackCheckoutProps) {
   const [email, setEmail] = useState("");
   const [customAmount, setCustomAmount] = useState("");
   const [error, setError] = useState("");
   const [paystackOpen, setPaystackOpen] = useState(false);
+  const [paystackReady, setPaystackReady] = useState(() => Boolean(window.PaystackPop));
+  const autoOpened = useRef(false);
   const hasCustomAmount = plan.allowCustomAmount === true;
   const actualAmount = useMemo(() => hasCustomAmount ? Number(customAmount) : plan.price, [customAmount, hasCustomAmount, plan.price]);
   const priceDisplay = hasCustomAmount && actualAmount > 0
@@ -50,6 +53,10 @@ export default function PaystackCheckout({ plan, onClose, onSuccess }: PaystackC
 
   useEffect(() => {
     setEmail(localStorage.getItem("fluxy_email") ?? "");
+    const handlePaystackReady = () => setPaystackReady(true);
+    window.addEventListener("paystack-ready", handlePaystackReady);
+    if (window.PaystackPop) setPaystackReady(true);
+    return () => window.removeEventListener("paystack-ready", handlePaystackReady);
   }, []);
 
   const handlePayment = () => {
@@ -84,8 +91,15 @@ export default function PaystackCheckout({ plan, onClose, onSuccess }: PaystackC
     // Fluxy checkout layer first so the Paystack payment page is the visible
     // top-level overlay instead of sitting behind our modal backdrop.
     setPaystackOpen(true);
-    window.setTimeout(() => handler.openIframe(), 0);
+    handler.openIframe();
   };
+
+  useEffect(() => {
+    if (autoOpen && !hasCustomAmount && !autoOpened.current && paystackReady && email.trim()) {
+      autoOpened.current = true;
+      handlePayment();
+    }
+  }, [autoOpen, email, hasCustomAmount, paystackReady]);
 
   return (
     <div className={`fixed inset-0 z-[9999] ${paystackOpen ? "pointer-events-none invisible" : "flex"} items-center justify-center overflow-y-auto bg-black/80 px-4 py-6 backdrop-blur-md`} role="dialog" aria-modal="true" aria-label={`Checkout for ${plan.name}`}>
@@ -119,8 +133,8 @@ export default function PaystackCheckout({ plan, onClose, onSuccess }: PaystackC
 
         {error && <div className="mt-4 rounded-xl border border-red-500/25 bg-red-500/10 px-3.5 py-3 text-xs leading-5 text-red-200">{error}</div>}
 
-        <button type="button" onClick={handlePayment} className="gradient-button mt-6 flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-sm font-extrabold text-white">
-          <LockKeyhole size={16} /> Pay {priceDisplay} with Paystack
+        <button type="button" onClick={handlePayment} disabled={!paystackReady} className="gradient-button mt-6 flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-sm font-extrabold text-white disabled:cursor-wait disabled:opacity-70">
+          {paystackReady ? <LockKeyhole size={16} /> : <Loader2 size={16} className="animate-spin" />} {paystackReady ? `Pay ${priceDisplay} with Paystack` : "Loading secure checkout…"}
         </button>
         <p className="mt-4 text-center text-[11px] text-[#8f80ab]"><LockKeyhole className="mr-1 inline-block h-3 w-3" />Secure payment inside Fluxy Tech • No redirect</p>
       </div>

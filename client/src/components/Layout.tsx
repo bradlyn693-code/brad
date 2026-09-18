@@ -15,6 +15,7 @@ import {
   Wallet,
   X,
   Zap,
+  ServerCog,
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { Link, useLocation } from "wouter";
@@ -31,6 +32,7 @@ const primaryNavigation: MenuItem[] = [
   { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
   { label: "My Servers", path: "/servers", icon: Server },
   { label: "Wallet", path: "/wallet", icon: Wallet },
+  { label: "VPS 🖥️", path: "/vps", icon: ServerCog, color: "#a855f7" },
   { label: "WhatsApp Channels 📢", path: "/whatsapp-channels", icon: Megaphone, color: "#25D366" },
   { label: "WhatsApp Ban/Unban 🪀", path: "/whatsapp-ban-unban", icon: Ban, color: "#ef4444" },
 ];
@@ -123,8 +125,11 @@ function Navigation({ onNavigate }: { onNavigate?: () => void }) {
 
 function AccountCard() {
   const [, setLocation] = useLocation();
+  const email = localStorage.getItem("fluxy_email") || "Account";
   const signOut = () => {
+    const accountEmail = localStorage.getItem("fluxy_account_email");
     localStorage.clear();
+    if (accountEmail) localStorage.setItem("fluxy_account_email", accountEmail);
     setLocation("/login");
     toast.success("Signed out securely");
   };
@@ -134,7 +139,7 @@ function AccountCard() {
       <div className="flex items-center gap-3">
         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-600 to-fuchsia-500 text-xs font-extrabold text-white">FT</div>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-xs font-bold text-white">Alex Morgan</p>
+          <p className="truncate text-xs font-bold text-white" title={email}>{email}</p>
           <p className="mt-0.5 text-[11px] text-[#a094b8]">Pro Plan</p>
         </div>
         <Boxes size={16} className="text-[#755d9f]" />

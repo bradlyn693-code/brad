@@ -24,10 +24,21 @@ export default function Login() {
       setError("Enter your email address and password to continue.");
       return;
     }
+    const normalizedEmail = email.trim().toLowerCase();
+    if (!/^\S+@\S+\.\S+$/.test(normalizedEmail)) {
+      setError("Enter a valid email address.");
+      return;
+    }
+    const registeredEmail = localStorage.getItem("fluxy_account_email");
+    if (registeredEmail && normalizedEmail !== registeredEmail.toLowerCase()) {
+      setError("That email does not match the registered Fluxy Tech account.");
+      return;
+    }
     setLoading(true);
     window.setTimeout(() => {
       localStorage.setItem("fluxy_logged", "true");
-      localStorage.setItem("fluxy_email", email.trim());
+      localStorage.setItem("fluxy_email", normalizedEmail);
+      localStorage.setItem("fluxy_account_email", registeredEmail ?? normalizedEmail);
       localStorage.setItem("fluxy_remember", String(remember));
       setLocation("/dashboard");
     }, 600);
@@ -48,7 +59,7 @@ export default function Login() {
         <form className="mt-7 space-y-4" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="email" className="mb-2 block text-xs font-semibold text-[#d1c7e4]">Email address</label>
-            <div className="relative"><Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#6b5a8a]" size={17} /><input id="email" type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="alex@company.com" className="w-full rounded-xl border border-[#2d1f4e] bg-[#0f0a1a] py-3.5 pl-10 pr-4 text-sm text-white outline-none transition placeholder:text-[#6b5a8a] focus:border-[#8b5cf6] focus:ring-2 focus:ring-violet-500/15" /></div>
+            <div className="relative"><Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#6b5a8a]" size={17} /><input id="email" type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="Enter your email" className="w-full rounded-xl border border-[#2d1f4e] bg-[#0f0a1a] py-3.5 pl-10 pr-4 text-sm text-white outline-none transition placeholder:text-[#6b5a8a] focus:border-[#8b5cf6] focus:ring-2 focus:ring-violet-500/15" /></div>
           </div>
           <div>
             <div className="mb-2 flex items-center justify-between"><label htmlFor="password" className="block text-xs font-semibold text-[#d1c7e4]">Password</label><Link href="/reset-password" className="text-xs font-semibold text-[#9f6cff] hover:text-[#c09cff]">Forgot password?</Link></div>

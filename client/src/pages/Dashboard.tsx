@@ -73,7 +73,7 @@ export default function Dashboard() {
           </div>
         </section>
       </div>
-      {checkoutPlan && <PaystackCheckout plan={checkoutPlan} onClose={() => setSelectedPlan(null)} onSuccess={(response) => { localStorage.setItem("fluxy_last_plan", checkoutPlan.name); localStorage.setItem("fluxy_last_payment", response.reference); window.alert(`Payment success ${response.reference}`); setSelectedPlan(null); setLocation("/servers"); }} />}
+      {checkoutPlan && <PaystackCheckout plan={checkoutPlan} autoOpen onClose={() => setSelectedPlan(null)} onSuccess={(response) => { localStorage.setItem("fluxy_last_plan", checkoutPlan.name); localStorage.setItem("fluxy_last_payment", response.reference); window.alert(`Payment success ${response.reference}`); setSelectedPlan(null); setLocation("/servers"); }} />}
     </Layout>
   );
 }

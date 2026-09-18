@@ -20,6 +20,7 @@ export default function Signup() {
     window.setTimeout(() => {
       localStorage.setItem("fluxy_logged", "true");
       localStorage.setItem("fluxy_email", email.trim());
+      localStorage.setItem("fluxy_account_email", email.trim().toLowerCase());
       setLocation("/dashboard");
     }, 600);
   };
