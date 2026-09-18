@@ -65,7 +65,7 @@ export default function Dashboard() {
                 <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${plan.admin ? "bg-[#f59e0b]/15 text-[#fbbf24]" : "bg-violet-500/15 text-[#b481ff]"}`}><HardDrive size={19} /></div>
                 <h2 className="mt-5 text-[26px] font-extrabold tracking-[-0.045em] text-white">{plan.name}</h2>
                 <p className="mt-1 h-10 max-w-[225px] text-[13px] leading-5 text-[#a094b8]">{plan.subtitle}</p>
-                <div className="mt-5 flex items-end gap-2"><p className="text-[34px] font-extrabold leading-none tracking-[-0.06em] text-white">{plan.priceDisplay}</p>{plan.price !== null && <span className="mb-0.5 text-sm text-[#8f80a7]">/ month</span>}</div>
+                <div className="mt-5 flex items-end gap-2"><p className="whitespace-pre-line text-[34px] font-extrabold leading-tight tracking-[-0.06em] text-white">{plan.priceDisplay}</p>{plan.price !== null && <span className="mb-0.5 text-sm text-[#8f80a7]">/ month</span>}</div>
                 <div className="my-5 h-px bg-[#2d1f4e]" />
                 <ul className="space-y-3">{plan.features.map((feature) => <li key={feature} className="flex items-center gap-2.5 text-[13px] text-[#f2edfa]"><span className="flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full bg-[#7c3aed] text-white"><Check size={12} strokeWidth={3} /></span>{feature}</li>)}</ul>
                 <button type="button" onClick={() => handlePlan(plan)} className={`mt-auto w-full rounded-xl px-4 py-3 text-sm font-extrabold text-white transition hover:brightness-110 ${plan.admin ? "bg-gradient-to-r from-[#f59e0b] to-[#7c3aed] shadow-[0_10px_24px_rgba(245,158,11,0.2)]" : "gradient-button"}`}>{plan.action ?? "BUY NOW"}</button>
