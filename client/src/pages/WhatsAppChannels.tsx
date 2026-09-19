@@ -3,6 +3,7 @@ import PaystackCheckout from "@/components/PaystackCheckout";
 import { Check, Megaphone, Sparkles, Target } from "lucide-react";
 import { useState } from "react";
 import { formatKesPrice } from "@/lib/currency";
+import PriceDisplay from "@/components/PriceDisplay";
 
 type ChannelPlan = {
   name: string;
@@ -75,7 +76,7 @@ export default function WhatsAppChannels() {
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#25D366]/15 text-[#25D366]"><Icon size={21} /></div>
                 <h2 className="mt-5 max-w-[220px] text-[25px] font-extrabold tracking-[-0.045em] text-white">{plan.name}</h2>
                 <p className="mt-2 text-[13px] text-[#a094b8]">{plan.subtitle}</p>
-                <div className="mt-6 flex items-end gap-2"><p className="whitespace-pre-line text-[32px] font-extrabold leading-tight tracking-[-0.06em] text-white">{plan.priceDisplay}</p><span className="mb-0.5 text-sm text-[#8f80a7]">/ one-time</span></div>
+                <div className="mt-6 flex items-end gap-2"><PriceDisplay value={plan.priceDisplay} className="text-[32px] font-extrabold leading-tight tracking-[-0.06em] text-white" /><span className="mb-0.5 text-sm text-[#8f80a7]">/ one-time</span></div>
                 <div className="my-5 h-px bg-[#2d1f4e]" />
                 <ul className="space-y-3">{plan.features.map((feature) => <li key={feature} className="flex items-start gap-2.5 text-[13px] leading-5 text-[#f2edfa]"><span className="mt-0.5 flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full bg-[#7c3aed] text-white"><Check size={12} strokeWidth={3} /></span>{feature}</li>)}</ul>
                 <button type="button" onClick={() => setSelectedPlan(plan)} className={`mt-auto flex w-full items-center justify-center rounded-xl px-4 py-3 text-sm font-extrabold text-white transition hover:brightness-110 ${plan.buttonClass}`}>BUY NOW</button>

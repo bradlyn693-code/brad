@@ -3,6 +3,7 @@ import PaystackCheckout from "@/components/PaystackCheckout";
 import { Ban, Check, CircleCheck, Clock3, FileSearch, ShieldCheck, Smartphone, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { formatUsdWithKes } from "@/lib/currency";
+import PriceDisplay from "@/components/PriceDisplay";
 
 type ServicePlan = {
   name: string;
@@ -73,11 +74,11 @@ export default function WhatsAppBanUnban() {
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-violet-500/15 text-[#b481ff]"><Icon size={22} /></div>
                 <h2 className="mt-5 text-2xl font-extrabold tracking-[-0.04em] text-white">{service.name}</h2>
                 <p className="mt-1 text-xs font-semibold text-[#b8a3d7]">{service.subtitle}</p>
-                <div className="mt-5 flex items-end gap-2"><p className="whitespace-pre-line text-4xl font-extrabold leading-tight tracking-[-0.06em] text-white">{service.priceDisplay}</p><span className="mb-0.5 text-sm text-[#8f80a7]">/ service</span></div>
+                <div className="mt-5 flex items-end gap-2"><PriceDisplay value={service.priceDisplay} className="text-4xl font-extrabold leading-tight tracking-[-0.06em] text-white" /><span className="mb-0.5 text-sm text-[#8f80a7]">/ service</span></div>
                 <p className="mt-5 text-[13px] leading-6 text-[#a094b8]">{service.description}</p>
                 <div className="my-5 h-px bg-[#2d1f4e]" />
                 <ul className="space-y-3">{service.features.map((feature) => <li key={feature} className="flex items-start gap-2.5 text-[13px] leading-5 text-[#f2edfa]"><span className="mt-0.5 flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full bg-[#7c3aed] text-white"><Check size={12} strokeWidth={3} /></span>{feature}</li>)}</ul>
-                <button type="button" onClick={() => setSelectedService(service)} className={`mt-auto flex w-full items-center justify-center whitespace-pre-line rounded-xl px-4 py-3.5 text-sm font-extrabold text-white transition hover:brightness-110 ${service.buttonClass}`}>BUY NOW — {service.priceDisplay}</button>
+                <button type="button" onClick={() => setSelectedService(service)} className={`mt-auto flex w-full items-center justify-center rounded-xl px-4 py-3.5 text-sm font-extrabold text-white transition hover:brightness-110 ${service.buttonClass}`}>BUY NOW</button>
               </article>
             );
           })}

@@ -3,6 +3,7 @@ import PaystackCheckout from "@/components/PaystackCheckout";
 import { Check, Cpu, Gauge, HardDrive, MemoryStick, Network, ShieldCheck, ServerCog } from "lucide-react";
 import { useState } from "react";
 import { formatKesPrice } from "@/lib/currency";
+import PriceDisplay from "@/components/PriceDisplay";
 
 type VPSPlan = {
   name: string;
@@ -104,7 +105,7 @@ export default function VPS() {
                 <h2 className="mt-5 max-w-[245px] text-[24px] font-extrabold tracking-[-0.045em] text-white">{plan.name}</h2>
                 <p className="mt-1 text-[13px] font-semibold" style={{ color: plan.accent }}>{plan.subtitle}</p>
                 <p className="mt-3 min-h-[66px] text-[13px] leading-5 text-[#a094b8]">{plan.description}</p>
-                <div className="mt-4 flex items-end gap-2"><p className="whitespace-pre-line text-[31px] font-extrabold leading-tight tracking-[-0.06em] text-white">{plan.priceDisplay}</p><span className="mb-0.5 text-sm text-[#8f80a7]">/ month</span></div>
+                <div className="mt-4 flex items-end gap-2"><PriceDisplay value={plan.priceDisplay} className="text-[31px] font-extrabold leading-tight tracking-[-0.06em] text-white" /><span className="mb-0.5 text-sm text-[#8f80a7]">/ month</span></div>
                 <div className="my-5 h-px bg-[#2d1f4e]" />
                 <ul className="space-y-2.5">{plan.features.map((feature) => <li key={feature} className="flex items-center gap-2.5 text-[13px] text-[#f2edfa]"><span className="flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full bg-[#7c3aed] text-white"><Check size={12} strokeWidth={3} /></span>{feature}</li>)}</ul>
                 <button type="button" onClick={() => setSelectedPlan(plan)} className="mt-auto flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#7c3aed] to-[#c026d3] px-4 py-3 text-sm font-extrabold text-white shadow-[0_10px_24px_rgba(124,58,237,0.24)] transition hover:brightness-110"><ServerCog size={16} />BUY NOW</button>

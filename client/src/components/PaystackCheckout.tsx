@@ -2,6 +2,7 @@ import { CreditCard, LockKeyhole, Loader2, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { formatKesPrice, USD_TO_KES } from "@/lib/currency";
+import PriceDisplay from "@/components/PriceDisplay";
 
 type PaystackResponse = { reference: string; [key: string]: unknown };
 
@@ -117,7 +118,7 @@ export default function PaystackCheckout({ plan, onClose, onSuccess, autoOpen = 
         <div className="mt-6 rounded-xl border border-[#2d1f4e] bg-[#0f0a1a] p-4">
           <div className="flex items-center justify-between gap-4">
             <div><p className="text-sm font-bold text-white">{plan.name}</p><p className="mt-1 text-xs text-[#a094b8]">Billed securely through Paystack</p></div>
-            <p className="shrink-0 whitespace-pre-line text-right text-lg font-extrabold leading-tight text-white">{priceDisplay}</p>
+            <PriceDisplay value={priceDisplay} className="shrink-0 text-right text-lg font-extrabold leading-tight text-white" />
           </div>
           <p className="mt-3 text-[10px] text-[#75658e]">USD equivalents are approximate · 1 USD ≈ KES {USD_TO_KES.toFixed(2)}</p>
           {hasCustomAmount && (
