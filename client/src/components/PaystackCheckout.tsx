@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { formatKesPrice, USD_TO_KES } from "@/lib/currency";
 import PriceDisplay from "@/components/PriceDisplay";
+import { loadPaystack } from "@/lib/paystack";
 
 type PaystackResponse = { reference: string; [key: string]: unknown };
 
@@ -46,6 +47,7 @@ export default function PaystackCheckout({ plan, onClose, onSuccess, autoOpen = 
   const [error, setError] = useState("");
   const [paystackOpen, setPaystackOpen] = useState(false);
   const [paystackReady, setPaystackReady] = useState(() => Boolean(window.PaystackPop));
+  const [paystackLoading, setPaystackLoading] = useState(() => !window.PaystackPop);
   const autoOpened = useRef(false);
   const hasCustomAmount = plan.allowCustomAmount === true;
   const actualAmount = useMemo(() => hasCustomAmount ? Number(customAmount) : plan.price, [customAmount, hasCustomAmount, plan.price]);
@@ -55,10 +57,11 @@ export default function PaystackCheckout({ plan, onClose, onSuccess, autoOpen = 
 
   useEffect(() => {
     setEmail(localStorage.getItem("fluxy_email") ?? "");
-    const handlePaystackReady = () => setPaystackReady(true);
-    window.addEventListener("paystack-ready", handlePaystackReady);
-    if (window.PaystackPop) setPaystackReady(true);
-    return () => window.removeEventListener("paystack-ready", handlePaystackReady);
+    let cancelled = false;
+    loadPaystack()
+      .then(() => { if (!cancelled) { setPaystackReady(true); setPaystackLoading(false); } })
+      .catch((loadError: Error) => { if (!cancelled) { setPaystackLoading(false); setError(loadError.message); } });
+    return () => { cancelled = true; };
   }, []);
 
   const handlePayment = () => {
@@ -71,29 +74,33 @@ export default function PaystackCheckout({ plan, onClose, onSuccess, autoOpen = 
       setError("Enter a valid amount greater than KES 0.00.");
       return;
     }
-    if (!window.PaystackPop) {
-      setError("Paystack is still loading. Please wait a moment and try again.");
+    if (!window.PaystackPop || !paystackReady) {
+      setError("Secure checkout is still loading. Please wait a moment and try again.");
       return;
     }
 
-    const handler = window.PaystackPop.setup({
-      key: publicKey,
-      email: email.trim(),
-      amount: Math.round(actualAmount * 100),
-      currency: plan.currency ?? "KES",
-      ref: `FLUXY_${Date.now()}`,
-      metadata: { plan_name: plan.name },
-      callback: (response) => onSuccess(response, actualAmount),
-      onClose: () => {
-        setPaystackOpen(false);
-        toast("Payment window closed", { description: "No payment was completed." });
-      },
-    });
-    // Paystack appends its Inline iframe to the document body. Hide the
-    // Fluxy checkout layer first so the Paystack payment page is the visible
-    // top-level overlay instead of sitting behind our modal backdrop.
-    setPaystackOpen(true);
-    handler.openIframe();
+    try {
+      const handler = window.PaystackPop.setup({
+        key: publicKey,
+        email: email.trim(),
+        amount: Math.round(actualAmount * 100),
+        currency: plan.currency ?? "KES",
+        ref: `FLUXY_${Date.now()}`,
+        metadata: { plan_name: plan.name },
+        callback: (response) => onSuccess(response, actualAmount),
+        onClose: () => {
+          setPaystackOpen(false);
+          toast("Payment window closed", { description: "No payment was completed." });
+        },
+      });
+      // Paystack appends its Inline iframe to document.body. Hide the Fluxy
+      // layer only after setup succeeds so a failed initialization is recoverable.
+      handler.openIframe();
+      setPaystackOpen(true);
+    } catch {
+      setPaystackOpen(false);
+      setError("Paystack could not open the payment page. Please try again.");
+    }
   };
 
   useEffect(() => {
@@ -136,7 +143,7 @@ export default function PaystackCheckout({ plan, onClose, onSuccess, autoOpen = 
 
         {error && <div className="mt-4 rounded-xl border border-red-500/25 bg-red-500/10 px-3.5 py-3 text-xs leading-5 text-red-200">{error}</div>}
 
-        <button type="button" onClick={handlePayment} disabled={!paystackReady} className="gradient-button mt-6 flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-sm font-extrabold text-white disabled:cursor-wait disabled:opacity-70">
+        <button type="button" onClick={handlePayment} disabled={paystackLoading} className="gradient-button mt-6 flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-sm font-extrabold text-white disabled:cursor-wait disabled:opacity-70">
           {paystackReady ? <LockKeyhole size={16} /> : <Loader2 size={16} className="animate-spin" />} {paystackReady ? `Pay ${priceDisplay} with Paystack` : "Loading secure checkout…"}
         </button>
         <p className="mt-4 text-center text-[11px] text-[#8f80ab]"><LockKeyhole className="mr-1 inline-block h-3 w-3" />Secure payment inside Fluxy Tech • No redirect</p>
