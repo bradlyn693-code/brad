@@ -1,9 +1,8 @@
 import Layout from "@/components/Layout";
-import PaystackCheckout from "@/components/PaystackCheckout";
 import { Check, Megaphone, Sparkles, Target } from "lucide-react";
-import { useState } from "react";
 import { formatKesPrice } from "@/lib/currency";
 import PriceDisplay from "@/components/PriceDisplay";
+import { PAYSTACK_PAYMENT_URL } from "@/lib/payment";
 
 type ChannelPlan = {
   name: string;
@@ -55,9 +54,6 @@ const channelPlans: ChannelPlan[] = [
 ];
 
 export default function WhatsAppChannels() {
-  const [selectedPlan, setSelectedPlan] = useState<ChannelPlan | null>(null);
-  const checkoutPlan = selectedPlan ? { name: selectedPlan.name, price: selectedPlan.price, priceDisplay: selectedPlan.priceDisplay } : null;
-
   return (
     <Layout>
       <div className="mx-auto max-w-[1200px] pt-2 lg:pt-10">
@@ -79,13 +75,12 @@ export default function WhatsAppChannels() {
                 <div className="mt-6 flex items-end gap-2"><PriceDisplay value={plan.priceDisplay} className="text-[32px] font-extrabold leading-tight tracking-[-0.06em] text-white" /><span className="mb-0.5 text-sm text-[#8f80a7]">/ one-time</span></div>
                 <div className="my-5 h-px bg-[#2d1f4e]" />
                 <ul className="space-y-3">{plan.features.map((feature) => <li key={feature} className="flex items-start gap-2.5 text-[13px] leading-5 text-[#f2edfa]"><span className="mt-0.5 flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full bg-[#7c3aed] text-white"><Check size={12} strokeWidth={3} /></span>{feature}</li>)}</ul>
-                <button type="button" onClick={() => setSelectedPlan(plan)} className={`mt-auto flex w-full items-center justify-center rounded-xl px-4 py-3 text-sm font-extrabold text-white transition hover:brightness-110 ${plan.buttonClass}`}>BUY NOW</button>
+                <a href={PAYSTACK_PAYMENT_URL} target="_blank" rel="noopener noreferrer" className={`mt-auto flex w-full items-center justify-center rounded-xl px-4 py-3 text-sm font-extrabold text-white transition hover:brightness-110 ${plan.buttonClass}`}>BUY NOW</a>
               </article>
             );
           })}
         </section>
       </div>
-      {checkoutPlan && <PaystackCheckout plan={checkoutPlan} autoOpen onClose={() => setSelectedPlan(null)} onSuccess={(response) => { localStorage.setItem("fluxy_last_channel_plan", checkoutPlan.name); localStorage.setItem("fluxy_last_channel_payment", response.reference); window.alert(`Payment success ${response.reference}`); setSelectedPlan(null); }} />}
     </Layout>
   );
 }

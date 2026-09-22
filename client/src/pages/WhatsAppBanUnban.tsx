@@ -1,8 +1,7 @@
 import Layout from "@/components/Layout";
-import PaystackCheckout from "@/components/PaystackCheckout";
 import { Ban, Check, CircleCheck, Clock3, FileSearch, ShieldCheck, Smartphone, Sparkles } from "lucide-react";
-import { useState } from "react";
 import { formatUsdWithKes } from "@/lib/currency";
+import { PAYSTACK_PAYMENT_URL } from "@/lib/payment";
 import PriceDisplay from "@/components/PriceDisplay";
 
 type ServicePlan = {
@@ -48,14 +47,11 @@ const services: ServicePlan[] = [
 
 const steps = [
   { number: "1", title: "Choose Service", text: "Select the support service that matches your WhatsApp number needs.", icon: Smartphone },
-  { number: "2", title: "Enter Number + Pay", text: "Share your order details and complete the secure inline payment.", icon: CircleCheck },
+  { number: "2", title: "Enter Number + Pay", text: "Share your order details and complete payment securely on Paystack.", icon: CircleCheck },
   { number: "3", title: "We Deliver in 24h", text: "Receive your report, appeal update, or service result by email.", icon: Clock3 },
 ];
 
 export default function WhatsAppBanUnban() {
-  const [selectedService, setSelectedService] = useState<ServicePlan | null>(null);
-  const checkoutPlan = selectedService ? { name: selectedService.name, price: selectedService.price, priceDisplay: selectedService.priceDisplay, currency: "KES" } : null;
-
   return (
     <Layout>
       <div className="mx-auto max-w-[1200px] pt-2 lg:pt-10">
@@ -78,7 +74,7 @@ export default function WhatsAppBanUnban() {
                 <p className="mt-5 text-[13px] leading-6 text-[#a094b8]">{service.description}</p>
                 <div className="my-5 h-px bg-[#2d1f4e]" />
                 <ul className="space-y-3">{service.features.map((feature) => <li key={feature} className="flex items-start gap-2.5 text-[13px] leading-5 text-[#f2edfa]"><span className="mt-0.5 flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full bg-[#7c3aed] text-white"><Check size={12} strokeWidth={3} /></span>{feature}</li>)}</ul>
-                <button type="button" onClick={() => setSelectedService(service)} className={`mt-auto flex w-full items-center justify-center rounded-xl px-4 py-3.5 text-sm font-extrabold text-white transition hover:brightness-110 ${service.buttonClass}`}>BUY NOW</button>
+                <a href={PAYSTACK_PAYMENT_URL} target="_blank" rel="noopener noreferrer" className={`mt-auto flex w-full items-center justify-center rounded-xl px-4 py-3.5 text-sm font-extrabold text-white transition hover:brightness-110 ${service.buttonClass}`}>BUY NOW</a>
               </article>
             );
           })}
@@ -91,7 +87,6 @@ export default function WhatsAppBanUnban() {
           </div>
         </section>
       </div>
-      {checkoutPlan && <PaystackCheckout plan={checkoutPlan} autoOpen onClose={() => setSelectedService(null)} onSuccess={(response) => { localStorage.setItem("fluxy_last_whatsapp_service", checkoutPlan.name); localStorage.setItem("fluxy_last_whatsapp_payment", response.reference); window.alert(`Payment success ${response.reference}`); setSelectedService(null); }} />}
     </Layout>
   );
 }

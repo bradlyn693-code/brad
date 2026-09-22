@@ -1,11 +1,9 @@
 import Layout from "@/components/Layout";
-import PaystackCheckout from "@/components/PaystackCheckout";
 import { Bell, Check, CircleHelp, Database, HardDrive, Search, Zap } from "lucide-react";
-import { useState } from "react";
-import { useLocation } from "wouter";
 import { toast } from "sonner";
 import { formatKesPrice } from "@/lib/currency";
 import PriceDisplay from "@/components/PriceDisplay";
+import { PAYSTACK_PAYMENT_URL } from "@/lib/payment";
 
 type Plan = {
   name: string;
@@ -26,20 +24,6 @@ const plans: Plan[] = [
 ];
 
 export default function Dashboard() {
-  const [, setLocation] = useLocation();
-  const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
-  const checkoutPlan = selectedPlan && selectedPlan.price !== null
-    ? { name: selectedPlan.name, price: selectedPlan.price, priceDisplay: selectedPlan.priceDisplay }
-    : null;
-
-  const handlePlan = (plan: Plan) => {
-    if (plan.price === null) {
-      toast("Sales concierge", { description: "Custom plan requests are ready for your account manager." });
-      return;
-    }
-    setSelectedPlan(plan);
-  };
-
   return (
     <Layout>
       <div className="mx-auto max-w-[1400px] pt-2 lg:pt-10">
@@ -69,13 +53,12 @@ export default function Dashboard() {
                 <div className="mt-5 flex items-end gap-2"><PriceDisplay value={plan.priceDisplay} className="text-[34px] font-extrabold leading-tight tracking-[-0.06em] text-white" />{plan.price !== null && <span className="mb-0.5 text-sm text-[#8f80a7]">/ month</span>}</div>
                 <div className="my-5 h-px bg-[#2d1f4e]" />
                 <ul className="space-y-3">{plan.features.map((feature) => <li key={feature} className="flex items-center gap-2.5 text-[13px] text-[#f2edfa]"><span className="flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full bg-[#7c3aed] text-white"><Check size={12} strokeWidth={3} /></span>{feature}</li>)}</ul>
-                <button type="button" onClick={() => handlePlan(plan)} className={`mt-auto w-full rounded-xl px-4 py-3 text-sm font-extrabold text-white transition hover:brightness-110 ${plan.admin ? "bg-gradient-to-r from-[#f59e0b] to-[#7c3aed] shadow-[0_10px_24px_rgba(245,158,11,0.2)]" : "gradient-button"}`}>{plan.action ?? "BUY NOW"}</button>
+                <a href={PAYSTACK_PAYMENT_URL} target="_blank" rel="noopener noreferrer" className={`mt-auto block w-full rounded-xl px-4 py-3 text-center text-sm font-extrabold text-white transition hover:brightness-110 ${plan.admin ? "bg-gradient-to-r from-[#f59e0b] to-[#7c3aed] shadow-[0_10px_24px_rgba(245,158,11,0.2)]" : "gradient-button"}`}>{plan.action ?? "BUY NOW"}</a>
               </article>
             ))}
           </div>
         </section>
       </div>
-      {checkoutPlan && <PaystackCheckout plan={checkoutPlan} autoOpen onClose={() => setSelectedPlan(null)} onSuccess={(response) => { localStorage.setItem("fluxy_last_plan", checkoutPlan.name); localStorage.setItem("fluxy_last_payment", response.reference); window.alert(`Payment success ${response.reference}`); setSelectedPlan(null); setLocation("/servers"); }} />}
     </Layout>
   );
 }
