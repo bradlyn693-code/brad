@@ -1,6 +1,7 @@
 import { AlertCircle, ArrowRight, CheckCircle2, LockKeyhole, Mail, ShieldCheck, Zap } from "lucide-react";
 import { FormEvent, useState } from "react";
 import { Link, useLocation } from "wouter";
+import { signUp } from "@/lib/auth";
 
 export default function Signup() {
   const [, setLocation] = useLocation();
@@ -10,19 +11,22 @@ export default function Signup() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError("");
     if (!email.trim() || !password || !confirmPassword) return setError("Complete all fields to create your workspace.");
     if (password.length < 6) return setError("Choose a password with at least 6 characters.");
     if (password !== confirmPassword) return setError("Your password confirmation does not match.");
     setLoading(true);
-    window.setTimeout(() => {
-      localStorage.setItem("fluxy_logged", "true");
-      localStorage.setItem("fluxy_email", email.trim());
-      localStorage.setItem("fluxy_account_email", email.trim().toLowerCase());
+    try {
+      const normalizedEmail = email.trim().toLowerCase();
+      await signUp(normalizedEmail, password);
       setLocation("/dashboard");
-    }, 600);
+    } catch (submitError) {
+      setError(submitError instanceof Error ? submitError.message : "Unable to create your account.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

@@ -1,6 +1,8 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Redirect, Route, Switch } from "wouter";
+import { useEffect, useState } from "react";
+import { getSession } from "@/lib/auth";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Dashboard from "./pages/Dashboard";
@@ -15,8 +17,14 @@ import WhatsAppBanUnban from "./pages/WhatsAppBanUnban";
 import VPS from "./pages/VPS";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const isAuthenticated = localStorage.getItem("fluxy_logged") === "true";
-  return isAuthenticated ? <>{children}</> : <Redirect to="/login" />;
+  const [state, setState] = useState<"checking" | "authenticated" | "unauthenticated">("checking");
+  useEffect(() => {
+    let active = true;
+    getSession().then((session) => { if (active) setState(session.authenticated ? "authenticated" : "unauthenticated"); }).catch(() => { if (active) setState("unauthenticated"); });
+    return () => { active = false; };
+  }, []);
+  if (state === "checking") return <div className="flex min-h-screen items-center justify-center bg-[#0a0618] text-sm text-[#a094b8]">Checking your secure session…</div>;
+  return state === "authenticated" ? <>{children}</> : <Redirect to="/login" />;
 }
 
 function Router() {

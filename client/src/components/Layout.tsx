@@ -17,9 +17,10 @@ import {
   Zap,
   ServerCog,
 } from "lucide-react";
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Link, useLocation } from "wouter";
 import { toast } from "sonner";
+import { getSession, signOut } from "@/lib/auth";
 
 type MenuItem = {
   label: string;
@@ -125,11 +126,13 @@ function Navigation({ onNavigate }: { onNavigate?: () => void }) {
 
 function AccountCard() {
   const [, setLocation] = useLocation();
-  const email = localStorage.getItem("fluxy_email") || "Account";
-  const signOut = () => {
-    const accountEmail = localStorage.getItem("fluxy_account_email");
+  const [email, setEmail] = useState("Account");
+  useEffect(() => {
+    getSession().then((session) => { if (session.user?.email) setEmail(session.user.email); }).catch(() => undefined);
+  }, []);
+  const handleSignOut = async () => {
+    await signOut().catch(() => undefined);
     localStorage.clear();
-    if (accountEmail) localStorage.setItem("fluxy_account_email", accountEmail);
     setLocation("/login");
     toast.success("Signed out securely");
   };
@@ -144,7 +147,7 @@ function AccountCard() {
         </div>
         <Boxes size={16} className="text-[#755d9f]" />
       </div>
-      <button type="button" onClick={signOut} className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg border border-red-500/15 bg-red-500/[0.06] py-2 text-[11px] font-bold text-red-400 transition hover:bg-red-500/10 hover:text-red-300">
+      <button type="button" onClick={handleSignOut} className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg border border-red-500/15 bg-red-500/[0.06] py-2 text-[11px] font-bold text-red-400 transition hover:bg-red-500/10 hover:text-red-300">
         <LogOut size={14} /> Sign Out
       </button>
     </div>

@@ -1,6 +1,7 @@
 import { AlertCircle, ArrowRight, Check, Eye, EyeOff, LockKeyhole, Mail, Zap } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
+import { getSession, signIn } from "@/lib/auth";
 
 export default function Login() {
   const [, setLocation] = useLocation();
@@ -12,12 +13,10 @@ export default function Login() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const savedEmail = localStorage.getItem("fluxy_email");
-    if (savedEmail) setEmail(savedEmail);
-    if (localStorage.getItem("fluxy_logged") === "true") setLocation("/dashboard");
+    getSession().then((session) => { if (session.authenticated) setLocation("/dashboard"); }).catch(() => undefined);
   }, [setLocation]);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError("");
     if (!email.trim() || !password) {
@@ -29,19 +28,15 @@ export default function Login() {
       setError("Enter a valid email address.");
       return;
     }
-    const registeredEmail = localStorage.getItem("fluxy_account_email");
-    if (registeredEmail && normalizedEmail !== registeredEmail.toLowerCase()) {
-      setError("That email does not match the registered Fluxy Tech account.");
-      return;
-    }
     setLoading(true);
-    window.setTimeout(() => {
-      localStorage.setItem("fluxy_logged", "true");
-      localStorage.setItem("fluxy_email", normalizedEmail);
-      localStorage.setItem("fluxy_account_email", registeredEmail ?? normalizedEmail);
-      localStorage.setItem("fluxy_remember", String(remember));
+    try {
+      await signIn(normalizedEmail, password, remember);
       setLocation("/dashboard");
-    }, 600);
+    } catch (submitError) {
+      setError(submitError instanceof Error ? submitError.message : "Unable to sign in.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
