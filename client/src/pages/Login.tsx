@@ -1,4 +1,4 @@
-import { AlertCircle, ArrowRight, Check, Eye, EyeOff, LockKeyhole, Mail, Zap } from "lucide-react";
+import { ArrowRight, Check, Eye, EyeOff, LockKeyhole, Mail, Zap } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { getSession, signIn } from "@/lib/auth";
@@ -10,7 +10,6 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [remember, setRemember] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
   useEffect(() => {
     getSession().then((session) => { if (session.authenticated) setLocation("/dashboard"); }).catch(() => undefined);
@@ -18,22 +17,19 @@ export default function Login() {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setError("");
     if (!email.trim() || !password) {
-      setError("Enter your email address and password to continue.");
       return;
     }
     const normalizedEmail = email.trim().toLowerCase();
     if (!/^\S+@\S+\.\S+$/.test(normalizedEmail)) {
-      setError("Enter a valid email address.");
       return;
     }
     setLoading(true);
     try {
       await signIn(normalizedEmail, password, remember);
       setLocation("/dashboard");
-    } catch (submitError) {
-      setError(submitError instanceof Error ? submitError.message : "Unable to sign in.");
+    } catch {
+      // Keep the sign-in screen clean without exposing server or deployment details.
     } finally {
       setLoading(false);
     }
@@ -61,7 +57,6 @@ export default function Login() {
             <div className="relative"><LockKeyhole className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#6b5a8a]" size={17} /><input id="password" type={showPassword ? "text" : "password"} autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Enter your password" className="w-full rounded-xl border border-[#2d1f4e] bg-[#0f0a1a] py-3.5 pl-10 pr-11 text-sm text-white outline-none transition placeholder:text-[#6b5a8a] focus:border-[#8b5cf6] focus:ring-2 focus:ring-violet-500/15" /><button type="button" aria-label={showPassword ? "Hide password" : "Show password"} onClick={() => setShowPassword(!showPassword)} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#6b5a8a] hover:text-[#c5b1e5]">{showPassword ? <EyeOff size={17} /> : <Eye size={17} />}</button></div>
           </div>
           <label className="flex items-center gap-2.5 pt-0.5 text-xs text-[#a094b8]"><span className={`flex h-[18px] w-[18px] items-center justify-center rounded-md border ${remember ? "border-[#7c3aed] bg-[#7c3aed] text-white" : "border-[#4b386f] bg-[#0f0a1a]"}`}><input type="checkbox" checked={remember} onChange={(event) => setRemember(event.target.checked)} className="sr-only" />{remember && <Check size={13} strokeWidth={3} />}</span>Remember me</label>
-          {error && <div className="flex gap-2 rounded-xl border border-red-500/25 bg-red-500/10 px-3.5 py-3 text-xs leading-5 text-red-200"><AlertCircle className="mt-0.5 shrink-0" size={15} />{error}</div>}
           <button type="submit" disabled={loading} className="gradient-button mt-2 flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-sm font-extrabold text-white">{loading ? "Signing in..." : <><span>Sign In</span><ArrowRight size={17} /></>}</button>
         </form>
         <p className="mt-7 text-center text-[13px] text-[#a094b8]">Don&apos;t have an account? <Link href="/signup" className="font-bold text-[#a86dff] hover:text-[#c5a4ff]">Create one</Link></p>
