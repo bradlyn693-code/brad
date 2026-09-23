@@ -6,8 +6,11 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
     credentials: "include",
     headers: { "Content-Type": "application/json", ...(options?.headers ?? {}) },
   });
-  const payload = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(payload.error || "Authentication request failed.");
+  const contentType = response.headers.get("content-type") || "";
+  const payload = contentType.includes("application/json") ? await response.json().catch(() => ({})) : {};
+  if (!response.ok) {
+    throw new Error(payload.error || `Authentication service returned HTTP ${response.status}. Check the Vercel API deployment and environment variables.`);
+  }
   return payload as T;
 }
 
