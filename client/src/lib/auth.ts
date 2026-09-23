@@ -8,9 +8,7 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
   });
   const contentType = response.headers.get("content-type") || "";
   const payload = contentType.includes("application/json") ? await response.json().catch(() => ({})) : {};
-  if (!response.ok) {
-    throw new Error(payload.error || `Authentication service returned HTTP ${response.status}. Check the Vercel API deployment and environment variables.`);
-  }
+  if (!response.ok) throw new Error(payload.error || "Unable to sign in. Please check your details and try again.");
   return payload as T;
 }
 
